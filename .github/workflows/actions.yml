@@ -34,7 +34,10 @@ jobs:
           fi
           echo "Using tag: $TAG"
 
-          docker build --build-arg JWT_SECRET=${{ secrets.JWT_SECRET }} -t ${{ secrets.DOCKER_USERNAME }}/${{ vars.DOCKER_REPO_GATEWAY }}:$TAG .
+          docker build \
+          --build-arg JWT_SECRET=${{ secrets.JWT_SECRET }} \
+          --build-arg PROFILE=$TAG \
+          -t ${{ secrets.DOCKER_USERNAME }}/${{ vars.DOCKER_REPO_GATEWAY }}:$TAG .
           docker push ${{ secrets.DOCKER_USERNAME }}/${{ vars.DOCKER_REPO_GATEWAY }}:$TAG
 
       - name: Set up kubectl
