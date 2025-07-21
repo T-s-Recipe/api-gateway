@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - name: Checkout code
@@ -50,5 +50,6 @@ jobs:
           KUBECONFIG_PATH: ./kubeconfig
         run: |
           echo "${{ secrets.KUBECONFIG }}" | base64 --decode > $KUBECONFIG_PATH
+          chmod 600 $KUBECONFIG_PATH
           kubectl --kubeconfig=$KUBECONFIG_PATH rollout restart deployment/${{ vars.DOCKER_REPO_GATEWAY }}
           kubectl --kubeconfig=$KUBECONFIG_PATH rollout status deployment/${{ vars.DOCKER_REPO_GATEWAY }}
