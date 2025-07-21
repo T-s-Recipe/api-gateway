@@ -47,7 +47,8 @@ jobs:
 
       - name: Kubernetes rollout restart
         env:
-          KUBECONFIG: ${{ secrets.KUBECONFIG }}
+          KUBECONFIG_PATH: ./kubeconfig
         run: |
-          kubectl rollout restart deployment/${{ vars.DOCKER_REPO_GATEWAY }}
-          kubectl rollout status deployment/${{ vars.DOCKER_REPO_GATEWAY }}
+          echo "${{ secrets.KUBECONFIG }}" | base64 --decode > $KUBECONFIG_PATH
+          kubectl --kubeconfig=$KUBECONFIG_PATH rollout restart deployment/${{ vars.DOCKER_REPO_GATEWAY }}
+          kubectl --kubeconfig=$KUBECONFIG_PATH rollout status deployment/${{ vars.DOCKER_REPO_GATEWAY }}
