@@ -1,0 +1,48 @@
+server:
+  port: 8000
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    kubernetes:
+      discovery:
+        enabled: true
+      loadbalancer:
+        enabled: true
+    gateway:
+      server:
+        webflux:
+          discovery:
+            locator:
+              enabled: false
+              lower-case-service-id: true
+          routes:
+            - id: auth
+              uri: lb://auth
+              predicates:
+                - Host=auth.dev.tsrecipe.shop
+            - id: member
+              uri: lb://member
+              predicates:
+                - Host=member.dev.tsrecipe.shop
+            - id: recipe
+              uri: lb://recipe
+              predicates:
+                - Host=recipe.dev.tsrecipe.shop
+
+auth-ignore:
+  host:
+    - "auth"
+  api:
+    recipe:
+      - "/"
+    member:
+      - "/"
+
+external-service-url:
+  auth: "http://auth:8010"
+
+jwt:
+  issuer: ${JWT_ISSUER}
+  secret-key: ${JWT_SECRET}
