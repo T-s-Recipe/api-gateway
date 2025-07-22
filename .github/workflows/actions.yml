@@ -46,7 +46,6 @@ jobs:
             --push . \
             --cache-from "type=local,src=${{ env.CACHE_DIR }}/docker" \
             --cache-to "type=local,dest=${{ env.CACHE_DIR }}/docker,mode=max" \
-            --mount=type=cache,id=gradle,target=/home/gradle/.gradle/caches,src=${{ env.CACHE_DIR }}/gradle \
             .
 
       - name: Set up kubectl
