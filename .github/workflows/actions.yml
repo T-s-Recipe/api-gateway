@@ -39,11 +39,10 @@ jobs:
           echo "Using tag: $TAG"
 
           docker buildx build \
-            --platform linux/amd64 \
             --build-arg JWT_SECRET=${{ secrets.JWT_SECRET }} \
             --build-arg PROFILE=$TAG \
             -t ${{ secrets.DOCKER_USERNAME }}/${{ vars.DOCKER_REPO_GATEWAY }}:$TAG \
-            --push . \
+            --push \
             --cache-from "type=local,src=${{ env.CACHE_DIR }}/docker" \
             --cache-to "type=local,dest=${{ env.CACHE_DIR }}/docker,mode=max" \
             .
