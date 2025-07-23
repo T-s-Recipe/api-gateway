@@ -13,6 +13,7 @@ RUN gradle build --no-daemon -x test
 FROM openjdk:17-jdk-slim
 WORKDIR /app
 
+COPY src/main/resources ./resources
 COPY --from=builder /app/build/libs/*.jar app.jar
 
 EXPOSE 8000
