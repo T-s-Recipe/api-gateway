@@ -58,5 +58,12 @@ jobs:
         run: |
           echo "${{ secrets.KUBECONFIG }}" | base64 --decode > $KUBECONFIG_PATH
           chmod 600 $KUBECONFIG_PATH
-          kubectl --kubeconfig=$KUBECONFIG_PATH rollout restart deployment/${{ vars.DOCKER_REPO_GATEWAY }}
-          kubectl --kubeconfig=$KUBECONFIG_PATH rollout status deployment/${{ vars.DOCKER_REPO_GATEWAY }}
+          kubectl --kubeconfig=$KUBECONFIG_PATH rollout restart deployment/gateway
+          kubectl --kubeconfig=$KUBECONFIG_PATH rollout status deployment/gateway
+
+      - name: Clean Up Docker Resources
+        if: always()
+        run: |
+          echo "Cleaning up Docker to save disk space..."
+          docker system prune -af
+          echo "Docker cleanup complete."
