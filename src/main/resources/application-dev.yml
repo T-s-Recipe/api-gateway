@@ -38,6 +38,11 @@ whitelist:
     recipes:
       - method: GET
         path: "/"
+  swagger-path:
+    - "/swagger-ui"
+    - "/v3/api-docs"
+    - "/swagger-resources"
+    - "/webjars"
 
 jwt:
   issuer: ${JWT_ISSUER}
