@@ -21,27 +21,23 @@ spring:
             - id: auth
               uri: lb://auth
               predicates:
-                - Host=auth.tsrecipe.shop
+                - Path=/auths/**
             - id: member
               uri: lb://member
               predicates:
-                - Host=member.tsrecipe.shop
+                - Path=/members/**
             - id: recipe
               uri: lb://recipe
               predicates:
-                - Host=recipe.tsrecipe.shop
+                - Path=/recipes/**
 
-auth-ignore:
-  host:
-    - "auth"
+whitelist:
+  service:
+    - "auths"
   api:
-    recipe:
-      - "/"
-    member:
-      - "/"
-
-external-service-url:
-  auth: "http://auth:8010"
+    recipes:
+      - method: GET
+        path: "/"
 
 jwt:
   issuer: ${JWT_ISSUER}
