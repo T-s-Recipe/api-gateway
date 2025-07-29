@@ -20,7 +20,6 @@ class GlobalAuthFilter(
 
     override fun filter(exchange: ServerWebExchange, chain: GatewayFilterChain): Mono<Void> {
         val request = exchange.request
-
         try {
             val path = request.path.value().trimStart('/')
             val serviceName = path.substringBefore("/")
@@ -53,6 +52,7 @@ class GlobalAuthFilter(
 
     private fun isAuthIgnoredRequest(serviceName: String, httpMethod: HttpMethod, path: String): Boolean {
         return (whitelistProperties.service.contains(serviceName))
+                || whitelistProperties.isSwaggerPath(path)
                 || (whitelistProperties.isWhitelist(serviceName, httpMethod, path))
     }
 

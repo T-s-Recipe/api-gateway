@@ -17,8 +17,6 @@ spring:
             locator:
               enabled: false
               lower-case-service-id: true
-          default-filters:
-            - StripPrefix=1
           routes:
             - id: auth
               uri: lb://auth
