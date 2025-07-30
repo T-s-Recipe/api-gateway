@@ -47,3 +47,7 @@ whitelist:
 jwt:
   issuer: ${JWT_ISSUER}
   secret-key: ${JWT_SECRET}
+
+logging:
+  level:
+    org.springframework.web: DEBUG
