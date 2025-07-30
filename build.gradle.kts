@@ -23,7 +23,7 @@ extra["springCloudVersion"] = "2025.0.0"
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.cloud:spring-cloud-starter-gateway-server-webflux")
-    implementation("org.springframework.cloud:spring-cloud-starter-kubernetes-client")
+    implementation("org.springframework.cloud:spring-cloud-starter-kubernetes-client-loadbalancer")
     implementation("org.springframework.boot:spring-boot-starter-aop")
 
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
