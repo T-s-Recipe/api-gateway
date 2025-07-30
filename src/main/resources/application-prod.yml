@@ -30,6 +30,9 @@ whitelist:
   service:
     - "auths"
   api:
+    members:
+      - method: POST
+        path: "/"
     recipes:
       - method: GET
         path: "/"
