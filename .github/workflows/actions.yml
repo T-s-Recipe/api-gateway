@@ -31,6 +31,7 @@ jobs:
 
           docker build \
             --build-arg JWT_SECRET=${{ secrets.JWT_SECRET }} \
+            --build-arg JWT_ISSUER=${{ secrets.JWT_ISSUER }} \
             --build-arg PROFILE=$TAG \
             -t ${{ secrets.DOCKER_USERNAME }}/${{ vars.DOCKER_REPO_GATEWAY }}:$TAG \
             .
