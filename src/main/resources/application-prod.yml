@@ -35,7 +35,7 @@ whitelist:
         path: "/"
     recipes:
       - method: GET
-        path: "/"
+        path: "/recent"
   swagger-path:
     - "/swagger-ui"
     - "/v3/api-docs"
