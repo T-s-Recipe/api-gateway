@@ -33,9 +33,15 @@ whitelist:
     members:
       - method: POST
         path: "/"
+      - method: GET
+        path: "/nickname"
     recipes:
       - method: GET
         path: "/recent"
+      - method: GET
+        path: "/{recipeId}"
+      - method: GET
+        path: "/"
   swagger-path:
     - "/swagger-ui"
     - "/v3/api-docs"
