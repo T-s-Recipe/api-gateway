@@ -23,7 +23,7 @@ class GlobalAuthFilter(
         try {
             val path = request.path.value().trimStart('/')
             val serviceName = path.substringBefore("/")
-            val apiPath = path.substringAfter(serviceName)
+            val apiPath = path.removePrefix(serviceName).ifEmpty { "/" }
             val httpMethod = exchange.request.method
 
             if (isAuthIgnoredRequest(serviceName, httpMethod, apiPath)) return chain.filter(exchange)
