@@ -17,7 +17,7 @@ spec:
           image: jh5253/tsrecipe-gateway:initial
           imagePullPolicy: Always
           ports:
-            - containerPort: 8010
+            - containerPort: 8000
           envFrom:
             - secretRef:
                 name: gateway-secret
