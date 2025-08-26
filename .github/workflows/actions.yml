@@ -10,6 +10,9 @@ jobs:
   build-and-deploy:
     runs-on: self-hosted
 
+    env:
+      SERVICE_NAME: gateway
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -22,20 +25,13 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          if [[ "${GITHUB_REF}" == "refs/heads/main" ]]; then
-            TAG="prod"
-          else
-            TAG="dev"
-          fi
-          echo "Using tag: $TAG"
+          IMAGE_TAG=${{ github.sha }}
+          IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/tsrecipe-${{ env.SERVICE_NAME }}
 
-          docker build \
-            --build-arg JWT_SECRET=${{ secrets.JWT_SECRET }} \
-            --build-arg JWT_ISSUER=${{ secrets.JWT_ISSUER }} \
-            --build-arg PROFILE=$TAG \
-            -t ${{ secrets.DOCKER_USERNAME }}/${{ vars.DOCKER_REPO_GATEWAY }}:$TAG \
-            .
-          docker push ${{ secrets.DOCKER_USERNAME }}/${{ vars.DOCKER_REPO_GATEWAY }}:$TAG
+          docker build -t $IMAGE_NAME:$IMAGE_TAG .
+          docker push $IMAGE_NAME:$IMAGE_TAG
+
+          echo "IMAGE_TO_DEPLOY=$IMAGE_NAME:$IMAGE_TAG" >> $GITHUB_ENV
 
       - name: Set up kubectl
         uses: azure/setup-kubectl@v3
@@ -43,9 +39,25 @@ jobs:
           version: 'latest'
 
       - name: Kubernetes rollout restart
+        env:
+          KUBECONFIG_PATH: ./kubeconfig
         run: |
-          kubectl rollout restart deployment/gateway
-          kubectl rollout status deployment/gateway
+          if [[ "${GITHUB_REF}" == "refs/heads/main" ]]; then
+            PROFILE="prod"
+          else
+            PROFILE="dev"
+          fi
+
+          sed -e "s|__PROFILE__|$PROFILE|g" \
+              -e "s|__JWT_ISSUER__|${{ secrets.JWT_ISSUER }}|g" \
+              -e "s|__JWT_SECRET__|${{ secrets.JWT_SECRET }}|g" \
+              k8s/secret.template.yaml | kubectl apply -f -
+
+          sed -i "s|image: .*|image: ${{ env.IMAGE_TO_DEPLOY }}|g" k8s/${{ env.SERVICE_NAME }}.yaml
+
+          kubectl apply -f k8s/${{ env.SERVICE_NAME }}.yaml
+
+          kubectl rollout status deployment/${{ env.SERVICE_NAME }}
 
       - name: Clean Up Docker Resources
         if: always()
